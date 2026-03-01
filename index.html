@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>محاكي اختبار NARSA - 40 سؤال</title>
+  <style>
+    :root{
+      --narsa-blue:#0b4aa2;
+      --narsa-yellow:#f2c94c;
+      --bg:#0b1220;
+      --card:#0f1b33;
+      --text:#e9eefc;
+      --muted:#a9b6d6;
+      --danger:#ff5a67;
+      --ok:#36d399;
+      --line:rgba(255,255,255,.12);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
+      background: radial-gradient(1200px 700px at 70% 0%, rgba(242,201,76,.18), transparent 60%),
+                  radial-gradient(900px 500px at 0% 10%, rgba(11,74,162,.22), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+    }
+    .wrap{max-width:980px;margin:0 auto;padding:18px}
+    .topbar{
+      display:flex;gap:12px;align-items:center;justify-content:space-between;
+      padding:14px 16px;border:1px solid var(--line);border-radius:14px;
+      background: linear-gradient(90deg, rgba(11,74,162,.25), rgba(242,201,76,.12));
+    }
+    .brand{
+      display:flex;gap:10px;align-items:center;
+    }
+    .badge{
+      width:42px;height:42px;border-radius:12px;
+      background: linear-gradient(135deg, var(--narsa-blue), rgba(11,74,162,.35));
+      display:grid;place-items:center;
+      border:1px solid rgba(255,255,255,.18);
+      font-weight:800;
+    }
+    .title h1{margin:0;font-size:16px;letter-spacing:.2px}
+    .title p{margin:2px 0 0;color:var(--muted);font-size:12px}
+    .meta{
+      display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end;
+      color:var(--muted);font-size:12px;
+    }
+    .pill{
+      padding:8px 10px;border-radius:999px;border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      display:flex;gap:8px;align-items:center;
+    }
+    .timer{
+      font-variant-numeric: tabular-nums;
+      color:var(--narsa-yellow);
+      font-weight:700;
+    }
+
+    .card{
+      margin-top:14px;
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border-radius:16px;
+      overflow:hidden;
+    }
+    .cardHeader{
+      padding:14px 16px;
+      display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;
+      border-bottom:1px solid var(--line);
+      background: rgba(15,27,51,.55);
+    }
+    .qno{
+      display:flex;gap:10px;align-items:center;
+      font-weight:800;
+    }
+    .qno .num{
+      width:48px;height:36px;border-radius:10px;
+      display:grid;place-items:center;
+      background: rgba(242,201,76,.18);
+      border:1px solid rgba(242,201,76,.35);
+      color:var(--narsa-yellow);
+      font-variant-numeric: tabular-nums;
+    }
+    .progress{
+      flex:1;min-width:240px;
+      height:10px;border-radius:999px;border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      overflow:hidden;
+    }
+    .bar{height:100%;width:0;background: linear-gradient(90deg, var(--narsa-blue), var(--narsa-yellow))}
+    .qbody{padding:16px}
+    .qtext{
+      font-size:18px;line-height:1.8;margin:0 0 10px 0;
+    }
+    .hint{
+      color:var(--muted);font-size:13px;margin:0 0 10px 0
+    }
+    .opts{display:grid;gap:10px;margin-top:10px}
+    .opt{
+      border:1px solid var(--line);
+      background: rgba(15,27,51,.55);
+      border-radius:12px;
+      padding:12px 12px;
+      display:flex;gap:12px;align-items:flex-start;
+      cursor:pointer;
+      transition:.15s ease;
+    }
+    .opt:hover{transform: translateY(-1px); border-color: rgba(242,201,76,.25)}
+    .opt input{margin-top:4px;transform:scale(1.15)}
+    .opt .code{
+      width:38px;flex:0 0 38px;
+      height:28px;border-radius:10px;
+      display:grid;place-items:center;
+      border:1px solid rgba(255,255,255,.15);
+      background: rgba(255,255,255,.04);
+      color:var(--muted);
+      font-variant-numeric: tabular-nums;
+      font-weight:700;
+    }
+    .opt .label{line-height:1.7}
+
+    .actions{
+      padding:14px 16px;
+      border-top:1px solid var(--line);
+      display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;
+      background: rgba(15,27,51,.55);
+    }
+    .btn{
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 14px;border-radius:12px;
+      cursor:pointer;font-weight:700;
+      transition:.15s ease;
+    }
+    .btn:hover{border-color: rgba(242,201,76,.25); transform: translateY(-1px)}
+    .btn.primary{
+      background: linear-gradient(90deg, rgba(11,74,162,.95), rgba(11,74,162,.55));
+      border-color: rgba(11,74,162,.55);
+    }
+    .btn.danger{
+      background: rgba(255,90,103,.12);
+      border-color: rgba(255,90,103,.35);
+      color: #ffd8db;
+    }
+    .btn:disabled{
+      opacity:.5;cursor:not-allowed;transform:none;
+    }
+    .note{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+      max-width:520px;
+    }
+
+    .screen{
+      margin-top:14px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:18px;
+      background: rgba(15,27,51,.5);
+    }
+    .screen h2{margin:0 0 8px;font-size:18px}
+    .screen p{margin:0;color:var(--muted);line-height:1.8}
+    .grid2{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
+    @media(min-width:820px){.grid2{grid-template-columns:1.2fr .8fr}}
+    .mini{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      background: rgba(255,255,255,.03);
+    }
+    .mini strong{color:var(--narsa-yellow)}
+    .results{
+      margin-top:14px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      overflow:hidden;
+    }
+    .resultsHeader{
+      padding:14px 16px;
+      border-bottom:1px solid var(--line);
+      background: rgba(15,27,51,.6);
+      display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
+    }
+    .score{
+      font-size:16px;font-weight:800;
+      color: var(--narsa-yellow);
+    }
+    .review{padding:16px;display:grid;gap:12px}
+    .item{
+      border:1px solid var(--line);
+      border-radius:14px;
+      background: rgba(255,255,255,.03);
+      padding:12px;
+    }
+    .item .head{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .tag{
+      padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+    }
+    .tag.ok{border-color: rgba(54,211,153,.4); background: rgba(54,211,153,.12); color:#d9fff0}
+    .tag.bad{border-color: rgba(255,90,103,.45); background: rgba(255,90,103,.12); color:#ffe1e4}
+    .small{color:var(--muted);font-size:12px;line-height:1.7;margin-top:8px}
+    .kbd{
+      font-variant-numeric: tabular-nums;
+      color: var(--text);
+      font-weight:700;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="badge">N</div>
+        <div class="title">
+          <h1>محاكي الاختبار النظري – 40 سؤال (صنف B)</h1>
+          <p>واجهة تفاعلية تعمل على Chrome — سؤال واحد في كل مرة، بدون رجوع (محاكاة الامتحان)</p>
+        </div>
+      </div>
+      <div class="meta">
+        <div class="pill">المدة: <span class="timer" id="timer">30:00</span></div>
+        <div class="pill">التقدم: <span id="progTxt" class="kbd">0/40</span></div>
+      </div>
+    </div>
+
+    <!-- شاشة البداية -->
+    <div class="screen" id="startScreen">
+      <div class="grid2">
+        <div class="mini">
+          <h2>تعليمات</h2>
+          <p>
+            - اضغط <strong>بدء الامتحان</strong> لبدء العدّ التنازلي.<br>
+            - لكل سؤال، اختر الإجابة ثم اضغط <strong>تأكيد الجواب</strong> للانتقال للسؤال التالي.<br>
+            - لا يمكنك الرجوع للسؤال السابق (محاكاة شاشة NARSA).<br>
+            - في النهاية ستظهر النتيجة والتصحيح.
+          </p>
+        </div>
+        <div class="mini">
+          <h2>معلومات</h2>
+          <p>
+            <strong>عدد الأسئلة:</strong> 40<br>
+            <strong>الصيغ:</strong> 1/2 — ½،½ — ../3 — ../4<br>
+            <strong>المحاور:</strong> الطريق، قواعد السير، السائق، المركبة، المخالفات
+          </p>
+          <div style="margin-top:12px">
+            <button class="btn primary" id="startBtn">بدء الامتحان</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- بطاقة السؤال -->
+    <div class="card" id="quizCard" style="display:none">
+      <div class="cardHeader">
+        <div class="qno">
+          <div class="num" id="qNum">01</div>
+          <div>
+            <div style="font-size:13px;color:var(--muted)">السؤال</div>
+            <div style="font-weight:800" id="qAxis">—</div>
+          </div>
+        </div>
+        <div class="progress" aria-label="progress"><div class="bar" id="bar"></div></div>
+      </div>
+
+      <div class="qbody">
+        <p class="qtext" id="qText">—</p>
+        <p class="hint" id="qHint">—</p>
+
+        <div class="opts" id="opts"></div>
+      </div>
+
+      <div class="actions">
+        <div class="note" id="note">
+          ملاحظة: بعض الأسئلة تتطلب اختيار أكثر من جواب واحد حسب صيغة السؤال.
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+          <button class="btn danger" id="finishEarlyBtn">إنهاء الآن</button>
+          <button class="btn primary" id="confirmBtn" disabled>تأكيد الجواب</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- النتائج -->
+    <div class="results" id="results" style="display:none">
+      <div class="resultsHeader">
+        <div>
+          <div style="color:var(--muted);font-size:12px">النتيجة النهائية</div>
+          <div class="score" id="scoreTxt">—</div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn" id="restartBtn">إعادة المحاولة</button>
+        </div>
+      </div>
+      <div class="review" id="review"></div>
+    </div>
+  </div>
+
+<script>
+/**
+ * بيانات الأسئلة (40)
+ * correct: مصفوفة أرقام (1-based) للخيارات الصحيحة
+ * axis: محور التكوين
+ */
+const QUESTIONS = [
+  // 1/2
+  { axis:"قواعد السير", text:"عند اقترابك من ممر الراجلين:", options:["أبطئ السرعة وأستعد للتوقف","أواصل السير بنفس السرعة"], correct:[1] },
+  { axis:"المخالفات", text:"استعمال الهاتف أثناء السياقة دون معدات مسموح بها:", options:["مخالفة","مسموح به"], correct:[1] },
+  { axis:"السائق", text:"حزام السلامة داخل المدينة:", options:["إجباري","اختياري"], correct:[1] },
+  { axis:"قواعد السير", text:"عند الضوء الأحمر:", options:["أتوقف قبل خط التوقف","أمر إذا لم تكن هناك سيارات"], correct:[1] },
+  { axis:"المخالفات", text:"السياقة تحت تأثير الكحول:", options:["ممنوعة قانوناً","مسموحة بنسبة قليلة"], correct:[1] },
+  { axis:"قواعد السير", text:"علامة STOP تعني:", options:["توقف تام","تخفيض السرعة فقط"], correct:[1] },
+  { axis:"الطريق", text:"في منعرج بدون رؤية واضحة:", options:["أمنع التجاوز","أسمح بالتجاوز إذا كانت السرعة منخفضة"], correct:[1] },
+  { axis:"قواعد السير", text:"السرعة القصوى داخل المدينة (إلا إذا أشير خلاف ذلك):", options:["60 كلم/س","80 كلم/س"], correct:[1] },
+  { axis:"المخالفات", text:"عدم أداء غرامة داخل الأجل القانوني:", options:["يؤدي لزيادة مالية","لا يترتب عنه شيء"], correct:[1] },
+  { axis:"قواعد السير", text:"الضوء البرتقالي الثابت يعني:", options:["الاستعداد للتوقف","المرور بسرعة"], correct:[1] },
+
+  // ½ ، ½
+  { axis:"السائق", text:"السياقة ليلاً تتطلب:", options:[
+      "استعمال أضواء التقابل",
+      "إطفاء الأضواء داخل المدينة",
+      "يزيد التعب من خطر الحوادث",
+      "التعب لا يؤثر"
+    ], correct:[1,3], multi:true,
+    hint:"هذا السؤال من نوع ½ ، ½ (اختر جوابين صحيحين)."
+  },
+  { axis:"قواعد السير", text:"المسافة القانونية بين العربات:", options:[
+      "تقلل خطر الاصطدام",
+      "لا أهمية لها",
+      "الفرملة المفاجئة قد تسبب حادثاً",
+      "الفرملة المفاجئة آمنة دائماً"
+    ], correct:[1,3], multi:true,
+    hint:"هذا السؤال من نوع ½ ، ½ (اختر جوابين صحيحين)."
+  },
+  { axis:"الطريق", text:"عند المطر:", options:[
+      "أزيد المسافة",
+      "أرفع السرعة",
+      "انزلاق العجلات سببه فقدان التماسك",
+      "انزلاق العجلات لا علاقة له بالمطر"
+    ], correct:[1,3], multi:true,
+    hint:"هذا السؤال من نوع ½ ، ½ (اختر جوابين صحيحين)."
+  },
+  { axis:"المركبة", text:"عند التوقف الاضطراري:", options:[
+      "المثلث العاكس للخطر إجباري",
+      "المثلث العاكس اختياري",
+      "السترة العاكسة إجباري استعمالها خارج العربة",
+      "السترة العاكسة غير ضرورية"
+    ], correct:[1,3], multi:true,
+    hint:"هذا السؤال من نوع ½ ، ½ (اختر جوابين صحيحين)."
+  },
+  { axis:"قواعد السير", text:"التجاوز:", options:[
+      "التجاوز من اليمين ممنوع غالباً",
+      "التجاوز من اليمين مسموح دائماً",
+      "عند خط متصل يمنع التجاوز",
+      "عند خط متصل يسمح بالتجاوز"
+    ], correct:[1,3], multi:true,
+    hint:"هذا السؤال من نوع ½ ، ½ (اختر جوابين صحيحين)."
+  },
+
+  // ../3 (اختيار واحد)
+  { axis:"المخالفات", text:"السياقة بدون تأمين:", options:["مخالفة بسيطة","جنحة","لا يعاقب عليها"], correct:[2] },
+  { axis:"قواعد السير", text:"الأولوية في ملتقى بدون إشارات:", options:["للأقرب","لليمين","للأسرع"], correct:[2] },
+  { axis:"المركبة", text:"عند انفجار عجلة:", options:["أفرمل بقوة","أمسك المقود جيداً وأخفض السرعة تدريجياً","أطفئ المحرك فوراً"], correct:[2] },
+  { axis:"المخالفات", text:"سحب النقط يتم بسبب:", options:["مخالفات خطيرة","السياقة الجيدة","احترام القانون"], correct:[1] },
+  { axis:"قواعد السير", text:"في الطريق السيار:", options:["التوقف مسموح في أي مكان","التوقف فقط في الحالات الطارئة","الرجوع للخلف مسموح"], correct:[2] },
+  { axis:"قواعد السير", text:"القيادة بسرعة مفرطة تؤدي إلى:", options:["تقليل مسافة التوقف","زيادة مسافة التوقف","لا تأثير لها"], correct:[2] },
+  { axis:"الطريق", text:"أضواء الضباب تُستعمل:", options:["عند الرؤية الجيدة","عند الضباب الكثيف","داخل المدينة دائماً"], correct:[2] },
+  { axis:"قواعد السير", text:"عند سماع صفارة الشرطة:", options:["أتجاهلها","أتوقف","أزيد السرعة"], correct:[2] },
+  { axis:"قواعد السير", text:"الخط المتقطع يسمح بـ:", options:["التجاوز","الوقوف فوقه","السير عكس الاتجاه"], correct:[1] },
+  { axis:"المخالفات/النقط", text:"رخصة السياقة لأول مرة تمنح برصيد:", options:["30 نقطة","20 نقطة","10 نقط"], correct:[2] },
+
+  // ../4 (متعدد غالباً)
+  { axis:"قواعد السير", text:"مسافة الأمان تعتمد على:", options:["السرعة","حالة الطريق","حالة الطقس","لون السيارة"], correct:[1,2,3], multi:true },
+  { axis:"السائق", text:"من أسباب الحوادث:", options:["السرعة","الكحول","الهاتف","احترام القانون"], correct:[1,2,3], multi:true },
+  { axis:"المركبة/الوثائق", text:"وثائق إجبارية داخل العربة:", options:["رخصة السياقة","البطاقة الرمادية","شهادة التأمين","بطاقة الناخب"], correct:[1,2,3], multi:true },
+  { axis:"قواعد السير", text:"عند اقتراب سيارة إسعاف:", options:["أفسح الطريق","أزيد السرعة","أتوقف إذا لزم","أتجاهلها"], correct:[1,3], multi:true },
+  { axis:"الطريق", text:"في منحدر:", options:["أستعمل مكبح المحرك","أضع السرعة المناسبة","أطفئ المحرك","أضغط القابض باستمرار"], correct:[1,2], multi:true },
+  { axis:"قواعد السير", text:"في منطقة محددة بـ 40 كلم/س، يمكن السير بسرعة:", options:["30","40","50","60"], correct:[1,2], multi:true },
+  { axis:"قواعد السير", text:"في حالة حادثة بدون إصابات:", options:["أؤمن المكان","أستعمل مثلث الخطر","أهرب","أملأ المعاينة الودية"], correct:[1,2,4], multi:true },
+  { axis:"المركبة", text:"الإطارات الجيدة:", options:["تحسن التماسك","تقلل مسافة التوقف","تمنع الحوادث كلياً","ضرورية للسلامة"], correct:[1,2,4], multi:true },
+  { axis:"قواعد السير", text:"عند الضوء الأخضر:", options:["أنطلق بحذر","أتحقق من خلو التقاطع","أضغط المنبه","أراقب الراجلين"], correct:[1,2,4], multi:true },
+  { axis:"قواعد السير", text:"في الطريق السيار يُمنع:", options:["السير في الاتجاه المعاكس","التوقف غير المبرر","الرجوع للخلف","استعمال حزام السلامة"], correct:[1,2,3], multi:true },
+  { axis:"قواعد السير", text:"من شروط التجاوز الآمن:", options:["رؤية واضحة","عدم وجود خط متصل","سرعة كافية","وجود منعرج"], correct:[1,2,3], multi:true },
+  { axis:"السائق", text:"السياقة الدفاعية تعني:", options:["توقع أخطاء الآخرين","احترام القانون","السرعة الزائدة","التركيز المستمر"], correct:[1,2,4], multi:true },
+  { axis:"الطريق", text:"عند الضباب الكثيف:", options:["تشغيل أضواء الضباب","تخفيض السرعة","استعمال الضوء العالي","زيادة المسافة"], correct:[1,2,4], multi:true },
+  { axis:"المخالفات/النقط", text:"من مخالفات سحب النقط:", options:["تجاوز السرعة","عدم وضع الحزام","قطع الضوء الأحمر","احترام المسافة"], correct:[1,2,3], multi:true },
+  { axis:"قواعد السير", text:"مسافة التوقف تتكون من:", options:["مسافة رد الفعل","مسافة الفرملة","مسافة الأمان","مسافة الرؤية"], correct:[1,2], multi:true },
+];
+
+// عناصر DOM
+const startScreen = document.getElementById("startScreen");
+const quizCard = document.getElementById("quizCard");
+const results = document.getElementById("results");
+const optsEl = document.getElementById("opts");
+const qNumEl = document.getElementById("qNum");
+const qAxisEl = document.getElementById("qAxis");
+const qTextEl = document.getElementById("qText");
+const qHintEl = document.getElementById("qHint");
+const barEl = document.getElementById("bar");
+const progTxt = document.getElementById("progTxt");
+const timerEl = document.getElementById("timer");
+const confirmBtn = document.getElementById("confirmBtn");
+const finishEarlyBtn = document.getElementById("finishEarlyBtn");
+const startBtn = document.getElementById("startBtn");
+const restartBtn = document.getElementById("restartBtn");
+const scoreTxt = document.getElementById("scoreTxt");
+const reviewEl = document.getElementById("review");
+
+// حالة الامتحان
+let idx = 0;
+let answers = []; // كل عنصر: {selected:[..]}
+let timer = null;
+let remainingSeconds = 30 * 60;
+let started = false;
+
+function pad2(n){ return String(n).padStart(2,"0"); }
+function formatTime(sec){
+  const m = Math.floor(sec/60);
+  const s = sec%60;
+  return `${pad2(m)}:${pad2(s)}`;
+}
+function updateTimerUI(){
+  timerEl.textContent = formatTime(remainingSeconds);
+  if(remainingSeconds <= 0){
+    timerEl.style.color = "var(--danger)";
+  }
+}
+function startTimer(){
+  updateTimerUI();
+  timer = setInterval(()=>{
+    remainingSeconds--;
+    updateTimerUI();
+    if(remainingSeconds <= 0){
+      clearInterval(timer);
+      timer = null;
+      finishExam(true);
+    }
+  }, 1000);
+}
+
+function setProgress(){
+  const done = idx; // الأسئلة التي تم تأكيدها
+  progTxt.textContent = `${done}/${QUESTIONS.length}`;
+  const pct = Math.round((done/QUESTIONS.length)*100);
+  barEl.style.width = `${pct}%`;
+}
+
+function isMulti(q){
+  // متعدد إذا كان correct أكثر من 1 أو q.multi true
+  return (q.multi === true) || (Array.isArray(q.correct) && q.correct.length > 1);
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[idx];
+  qNumEl.textContent = pad2(idx+1);
+  qAxisEl.textContent = q.axis;
+  qTextEl.textContent = q.text;
+
+  const multi = isMulti(q);
+  qHintEl.textContent = q.hint ? q.hint : (multi ? "اختر جميع الأجوبة الصحيحة." : "اختر جواباً واحداً.");
+
+  optsEl.innerHTML = "";
+  confirmBtn.disabled = true;
+
+  const inputType = multi ? "checkbox" : "radio";
+  q.options.forEach((opt, i)=>{
+    const code = pad2(i+1);
+    const id = `q${idx}_o${i}`;
+
+    const row = document.createElement("label");
+    row.className = "opt";
+    row.setAttribute("for", id);
+
+    const codeBox = document.createElement("div");
+    codeBox.className = "code";
+    codeBox.textContent = code;
+
+    const input = document.createElement("input");
+    input.type = inputType;
+    input.name = `q${idx}`;
+    input.id = id;
+    input.value = String(i+1);
+
+    const text = document.createElement("div");
+    text.className = "label";
+    text.textContent = opt;
+
+    row.appendChild(codeBox);
+    row.appendChild(input);
+    row.appendChild(text);
+
+    input.addEventListener("change", ()=>{
+      // تفعيل زر التأكيد إذا كان هناك اختيار واحد على الأقل
+      const selected = getSelected();
+      confirmBtn.disabled = selected.length === 0;
+      // إذا كان radio: اجعل كل النقرات تتعامل مع نفس السؤال
+      if(!multi){
+        // nothing else needed
+      }
+    });
+
+    optsEl.appendChild(row);
+  });
+
+  setProgress();
+}
+
+function getSelected(){
+  const inputs = optsEl.querySelectorAll("input");
+  const selected = [];
+  inputs.forEach(inp=>{
+    if(inp.checked) selected.push(Number(inp.value));
+  });
+  return selected;
+}
+
+function arraysEqualAsSets(a,b){
+  const sa = new Set(a);
+  const sb = new Set(b);
+  if(sa.size !== sb.size) return false;
+  for(const v of sa) if(!sb.has(v)) return false;
+  return true;
+}
+
+function confirmAnswer(){
+  const q = QUESTIONS[idx];
+  const selected = getSelected();
+  if(selected.length === 0) return;
+
+  answers[idx] = { selected };
+
+  idx++;
+  if(idx >= QUESTIONS.length){
+    finishExam(false);
+    return;
+  }
+  renderQuestion();
+}
+
+function computeScore(){
+  let correctCount = 0;
+  const details = [];
+
+  QUESTIONS.forEach((q, i)=>{
+    const sel = answers[i]?.selected || [];
+    const ok = arraysEqualAsSets(sel, q.correct);
+    if(ok) correctCount++;
+    details.push({ i, ok, selected: sel, correct: q.correct, q });
+  });
+
+  return { correctCount, total: QUESTIONS.length, details };
+}
+
+function finishExam(timeout){
+  if(timer){
+    clearInterval(timer);
+    timer = null;
+  }
+
+  quizCard.style.display = "none";
+  results.style.display = "block";
+
+  const { correctCount, total, details } = computeScore();
+  const pct = Math.round((correctCount/total)*100);
+
+  scoreTxt.textContent = `${correctCount} / ${total}  ( ${pct}% )` + (timeout ? " — انتهى الوقت" : "");
+
+  // بناء مراجعة مختصرة
+  reviewEl.innerHTML = "";
+  details.forEach(d=>{
+    const item = document.createElement("div");
+    item.className = "item";
+
+    const head = document.createElement("div");
+    head.className = "head";
+
+    const left = document.createElement("div");
+    left.innerHTML = `<strong>سؤال ${pad2(d.i+1)}</strong> <span style="color:var(--muted)">— ${d.q.axis}</span>`;
+
+    const tag = document.createElement("div");
+    tag.className = "tag " + (d.ok ? "ok" : "bad");
+    tag.textContent = d.ok ? "صحيح" : "خطأ";
+
+    head.appendChild(left);
+    head.appendChild(tag);
+
+    const qtxt = document.createElement("div");
+    qtxt.className = "small";
+    qtxt.innerHTML = `<div style="margin-top:8px"><span style="color:var(--muted)">السؤال:</span> ${d.q.text}</div>`;
+
+    const your = document.createElement("div");
+    your.className = "small";
+    your.innerHTML =
+      `<div><span style="color:var(--muted)">اختيارك:</span> <span class="kbd">${(d.selected.length? d.selected.map(pad2).join("، ") : "—")}</span></div>
+       <div><span style="color:var(--muted)">الصحيح:</span> <span class="kbd">${d.correct.map(pad2).join("، ")}</span></div>`;
+
+    item.appendChild(head);
+    item.appendChild(qtxt);
+    item.appendChild(your);
+
+    // عرض الاختيارات (اختياري)
+    const optList = document.createElement("div");
+    optList.className = "small";
+    optList.style.marginTop = "6px";
+    optList.innerHTML = d.q.options.map((t, j)=>{
+      const code = pad2(j+1);
+      const isCorrect = d.correct.includes(j+1);
+      const isSel = d.selected.includes(j+1);
+      const mark = isCorrect ? "✅" : (isSel ? "☑️" : "▫️");
+      return `<div>${mark} <span class="kbd">${code}</span> — ${t}</div>`;
+    }).join("");
+    item.appendChild(optList);
+
+    reviewEl.appendChild(item);
+  });
+}
+
+function resetAll(){
+  idx = 0;
+  answers = [];
+  remainingSeconds = 30*60;
+  started = false;
+  updateTimerUI();
+  progTxt.textContent = `0/${QUESTIONS.length}`;
+  barEl.style.width = "0%";
+
+  results.style.display = "none";
+  quizCard.style.display = "none";
+  startScreen.style.display = "block";
+}
+
+startBtn.addEventListener("click", ()=>{
+  if(started) return;
+  started = true;
+  startScreen.style.display = "none";
+  quizCard.style.display = "block";
+  renderQuestion();
+  startTimer();
+});
+
+confirmBtn.addEventListener("click", confirmAnswer);
+
+finishEarlyBtn.addEventListener("click", ()=>{
+  const ok = confirm("هل تريد إنهاء الامتحان الآن؟ سيتم احتساب الأسئلة غير المجاب عنها كخاطئة.");
+  if(ok) finishExam(false);
+});
+
+restartBtn.addEventListener("click", resetAll);
+
+// init
+updateTimerUI();
+progTxt.textContent = `0/${QUESTIONS.length}`;
+</script>
+</body>
+</html>
